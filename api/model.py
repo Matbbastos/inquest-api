@@ -9,6 +9,9 @@ class Person(db.Model):
     cpf = db.Column(db.String(20), primary_key=True)
     name = db.Column(db.String(100), nullable=False)
 
+    companies = db.relationship('Company')
+    assets = db.relationship('Asset')
+
     def __init__(self, cpf, name):
         """This is the constructor of the class
 
@@ -42,6 +45,14 @@ class Company(db.Model):
 
     cnpj = db.Column(db.String(30), primary_key=True)
     name = db.Column(db.String(100), nullable=False)
+    parent_cnpj = db.Column(db.String(30), db.ForeignKey('companies.cnpj'))
+    parent_cpf = db.Column(db.String(20), db.ForeignKey('people.cpf'))
+
+    assets = db.relationship('Asset')
+    children_company = db.relationship('Company',
+                                       remote_side='Company.cnpj',
+                                       backref=db.backref('children_company'),
+                                       single_parent=True)
 
     def __init__(self, cnpj, name):
         """This is the constructor of the class
@@ -78,6 +89,9 @@ class Asset(db.Model):
     description = db.Column(db.String(100), nullable=False)
     date_acquisition = db.Column(db.DateTime)
     value = db.Column(db.Numeric)
+
+    parent_cnpj = db.Column(db.String(30), db.ForeignKey('companies.cnpj'))
+    parent_cpf = db.Column(db.String(20), db.ForeignKey('people.cpf'))
 
     def __init__(self, id_, description, date_acquisition=None, value=None):
         """This is the constructor of the class
