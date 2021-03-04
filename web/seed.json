@@ -1,20 +1,145 @@
 {
-    "Testman Tester": {
-        "email": "test@testman.dop"
-    },
-    "Testwoman Tester": {
-        "email": "test@testwoman.dop"
-    },
-    "Testboy Tester": {
-        "email": "test@testboy.dop"
-    },
-    "Testgirl Tester": {
-        "email": "test@testgirl.dop"
-    },
-    "Testdog Tester": {
-        "email": "test@testdog.dop"
-    },
-    "Testcat Tester": {
-        "email": "test@testcat.dop"
-    }
+    "People": 
+    [
+        {
+            "cpf": "000.001.010-01",
+            "name": "Cristiana Chousa Cerveira",
+            "companies":[
+                "12.345.000/0001-01"],
+            "assets":[
+                "0234"]
+        },
+        {
+            "cpf": "000.022.020-00",
+            "name": "Marlon Guerra Rosa",
+            "companies":[],
+            "assets":[
+                "0145"]
+        },
+        {
+            "cpf": "000.303.030-03",
+            "name": "Lisandra Talhão Castelo",
+            "companies":[],
+            "assets":[
+                "0359"]
+        },
+        {
+            "cpf": "000.004.440-00",
+            "name": "Luciana Guedes Teves",
+            "companies":[
+                "98.765.000/0001-02"
+            ],
+            "assets":[
+                "0025"]
+        },
+        {
+            "cpf": "005.005.055-05",
+            "name": "Eden Bentes Canhão",
+            "companies":[
+                "98.765.000/0001-02"
+            ],
+            "assets":[
+                "0078", "0138"]
+        }
+    ],
+    "Companies":
+    [
+        {
+            "cnpj": "12.345.000/0001-01",
+            "name": "Testes ABC S/A",
+            "parent_cpf": "000.001.010-01",
+            "parent_cnpj": "",
+            "assets":[
+                "0844"
+            ],
+            "companies": []
+        },
+        {
+            "cnpj": "98.765.000/0001-02",
+            "name": "Estudos XYZ LTDA",
+            "parent_cpf": "000.004.440-00",
+            "parent_cnpj": "",
+            "assets":[
+                "0802"
+            ],
+            "companies": [
+                "55.555.000/0001-03"
+            ]
+        },
+        {
+            "cnpj": "55.555.000/0001-03",
+            "name": "Testes ABC S/A",
+            "parent_cpf": "",
+            "parent_cnpj": "98.765.000/0001-02",
+            "assets":[],
+            "companies": []
+        }
+    ],
+    "Assets":
+    [
+        {
+            "id": "0802",
+            "description": "Carro",
+            "date_acquisition": "02/06/2019",
+            "value": "R$19.000,00",
+            "parent_cnpj":"98.765.000/0001-02",
+            "parent_cpf": ""
+        },
+        {
+            "id": "0234",
+            "description": "Moto",
+            "date_acquisition": "02/06/2020",
+            "value": "R$10.000,00",
+            "parent_cnpj":"",
+            "parent_cpf": "000.001.010-01"
+        },
+        {
+            "id": "0145",
+            "description": "Bicicleta",
+            "date_acquisition": "06/01/2021",
+            "value": "R$2.100,00",
+            "parent_cnpj":"",
+            "parent_cpf": "000.022.020-00"
+        },
+        {
+            "id": "0359",
+            "description": "Trator",
+            "date_acquisition": "02/02/2018",
+            "value": "R$35.000,00",
+            "parent_cnpj":"",
+            "parent_cpf": "000.303.030-03"
+        },
+        {
+            "id": "0025",
+            "description": "Casa",
+            "date_acquisition": "02/06/2017",
+            "value": "R$290.800,00",
+            "parent_cnpj":"",
+            "parent_cpf": "000.004.440-00"
+        },
+        {
+            "id": "0078",
+            "description": "Carro",
+            "date_acquisition": "02/06/2019",
+            "value": "R$19.000,00",
+            "parent_cnpj":"",
+            "parent_cpf": "005.005.055-05"
+        },
+        {
+            "id": "0138",
+            "description": "Apartamento",
+            "date_acquisition": "20/12/2012",
+            "value": "R$215.000,00",
+            "parent_cnpj":"",
+            "parent_cpf": "005.005.055-05"
+        },
+        {
+            "id": "0844",
+            "description": "Carro",
+            "date_acquisition": "02/07/2018",
+            "value": "R$32.000,00",
+            "parent_cnpj":"12.345.000/0001-01",
+            "parent_cpf": ""
+        }
+    ]
 }
