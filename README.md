@@ -11,3 +11,19 @@ For commit messages in this repository, the following prefix convention is used:
 * TEST: everything related to testing
 * DOCS: everything related to documentation
 * CHORE: regular code maintenance
+
+## Docker
+```bash
+# Build and run container in 'detached' mode
+docker-compose up -d --build
+# Create database for testing
+docker-compose exec web python manage.py create_db
+# Populate database with test data
+docker-compose exec web python manage.py seed_db
+# Run unit tests and coverage report (if successful)
+docker-compose exec web python manage.py cov
+# Run psql to access database
+docker-compose exec db psql --username=admin --dbname=test_db
+# Bring down all containers and volumes
+docker-compose down -v
+```
