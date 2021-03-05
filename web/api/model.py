@@ -2,7 +2,12 @@ from api import db
 
 
 class Person(db.Model):
-    """This class represents a person"""
+    """This class represents a person.
+
+    Args:
+        cpf (string): CPF number of the person (unique, 11 digits)
+        name (string): full name of the person
+    """
 
     __tablename__ = "people"
 
@@ -13,12 +18,6 @@ class Person(db.Model):
     assets = db.relationship('Asset')
 
     def __init__(self, cpf, name):
-        """This is the constructor of the class
-
-        Args:
-            cpf (string): CPF number of the person (unique, 11 digits)
-            name (string): full name of the person
-        """
         self.cpf = cpf
         self.name = name
 
@@ -30,6 +29,10 @@ class Person(db.Model):
     def get_all():
         return Person.query.all()
 
+    @staticmethod
+    def get(cpf):
+        return Person.query.get(cpf)
+
     def delete(self):
         db.session.delete(self)
         db.session.commit()
@@ -39,28 +42,31 @@ class Person(db.Model):
 
 
 class Company(db.Model):
-    """This class represents a comapny"""
+    """This class represents a comapny.
+
+    Args:
+        cnpj (string): CNPJ number of the company (unique, 14 digits)
+        name (string): full name of the company
+    """
 
     __tablename__ = "companies"
+    __table_args__ = (
+        (db.CheckConstraint('num_nonnulls(parent_cnpj, parent_cpf) = 1', name='single_parent')),
+    )
 
     cnpj = db.Column(db.String(30), primary_key=True)
     name = db.Column(db.String(100), nullable=False)
-    parent_cnpj = db.Column(db.String(30), db.ForeignKey('companies.cnpj'))
-    parent_cpf = db.Column(db.String(20), db.ForeignKey('people.cpf'))
+    parent_cnpj = db.Column(db.String(30), db.ForeignKey('companies.cnpj'), name='parent_cnpj', nullable=True)
+    parent_cpf = db.Column(db.String(20), db.ForeignKey('people.cpf'), name='parent_cpf', nullable=True)
 
     assets = db.relationship('Asset')
-    children_company = db.relationship('Company',
-                                       remote_side='Company.cnpj',
-                                       backref=db.backref('children_company'),
-                                       single_parent=True)
+    children_company = db.relationship(
+        'Company',
+        remote_side='Company.cnpj',
+        backref=db.backref('children_company'),
+        single_parent=True)
 
     def __init__(self, cnpj, name):
-        """This is the constructor of the class
-
-        Args:
-            cnpj (string): CNPJ number of the company (unique, 14 digits)
-            name (string): full name of the company
-        """
         self.cnpj = cnpj
         self.name = name
 
@@ -72,6 +78,10 @@ class Company(db.Model):
     def get_all():
         return Company.query.all()
 
+    @staticmethod
+    def get(cnpj):
+        return Company.query.get(cnpj)
+
     def delete(self):
         db.session.delete(self)
         db.session.commit()
@@ -81,31 +91,33 @@ class Company(db.Model):
 
 
 class Asset(db.Model):
-    """This class represents any type of asset"""
+    """This class represents any type of asset.
+
+    Args:
+        id_ (integer): Identification number of the asset
+        description (string): general description of the asset
+        date_acquisition (datetime): date at which it was obtained
+        value (numeric): estimated or market value
+    """
 
     __tablename__ = "assets"
+    __table_args__ = (
+        (db.CheckConstraint('num_nonnulls(parent_cnpj, parent_cpf) = 1', name='single_parent')),
+    )
 
     id_ = db.Column(db.Integer, primary_key=True)
+    value = db.Column(db.Numeric, nullable=False)
     description = db.Column(db.String(100), nullable=False)
     date_acquisition = db.Column(db.DateTime)
-    value = db.Column(db.Numeric)
 
-    parent_cnpj = db.Column(db.String(30), db.ForeignKey('companies.cnpj'))
-    parent_cpf = db.Column(db.String(20), db.ForeignKey('people.cpf'))
+    parent_cnpj = db.Column(db.String(30), db.ForeignKey('companies.cnpj'), name='parent_cnpj', nullable=True)
+    parent_cpf = db.Column(db.String(20), db.ForeignKey('people.cpf'), name='parent_cpf', nullable=True)
 
-    def __init__(self, id_, description, date_acquisition=None, value=None):
-        """This is the constructor of the class
-
-        Args:
-            id_ (integer): Identification number of the asset
-            description (string): general description of the asset
-            date_acquisition (datetime): date at which it was obtained
-            value (numeric): estimated or market value
-        """
+    def __init__(self, id_, value, description, date_acquisition=None):
         self.id_ = id_
+        self.value = value
         self.description = description
         self.date_acquisition = date_acquisition
-        self.value = value
 
     def save(self):
         db.session.add(self)
@@ -115,9 +127,13 @@ class Asset(db.Model):
     def get_all():
         return Asset.query.all()
 
+    @staticmethod
+    def get(id_):
+        return Asset.query.get(id_)
+
     def delete(self):
         db.session.delete(self)
         db.session.commit()
 
     def __repr__(self):
-        return f"<Asset: ({self.id_}) {self.description}>"
+        return f"<Asset: ({self.id_}) R${self.value} - {self.description}>"
